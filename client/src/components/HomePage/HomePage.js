@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Container } from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
 
 class HomePage extends Component {
   render() {
     return (
-      <div>
-        <p>HomePage</p>
-        <Link to={'/auth'}>create user</Link>
-      </div>
+      <Container>
+        <Typography variant={'h1'}>HomePage</Typography>
+      </Container>
     );
   }
 }

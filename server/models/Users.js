@@ -24,9 +24,9 @@ const UsersSchema = new Schema({
         type: String,
         required: true
     },
-    schedule: {
-        type: Schema.Types.ObjectId,
-        ref: "schedules"
+    isAdmin:{
+        type:Boolean,
+        default:false
     },
     groups: {
         type: Schema.Types.ObjectId,

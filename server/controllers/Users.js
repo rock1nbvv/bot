@@ -30,6 +30,7 @@ exports.createUser = async (req, res) => {
             firstName: newUser.firstName,
             lastName: newUser.lastName,
             middleName: newUser.middleName,
+            isAdmin:newUser.isAdmin
         };
 
         jwt.sign({data: payload}, "rock1nbvv", {expiresIn: 36000}, (err, token) => {
@@ -76,6 +77,7 @@ exports.logInUser = async (req, res) => {
                     firstName: user.firstName,
                     lastName: user.lastName,
                     middleName: user.middleName,
+                    isAdmin:user.isAdmin
                 };
 
                 jwt.sign({data: payload}, "rock1nbvv", {expiresIn: 36000}, (err, token) => {
@@ -87,6 +89,16 @@ exports.logInUser = async (req, res) => {
 
             })
     } catch (e) {
+        res.status(500).json({
+            message: e.message
+        });
+    }
+};
+
+exports.getUserByJWT = async (req, res) => {
+    try {
+        await res.json(req.user);
+    }catch (e) {
         res.status(500).json({
             message: e.message
         });

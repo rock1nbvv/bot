@@ -11,14 +11,32 @@ module.exports = async passport => {
 
     passport.use("jwt-local", new JwtStrategy(optsJWT, async (jwt_payload, done) => {
         try {
-            const {_id} = jwt_payload.date;
+            const {_id} = jwt_payload.data;
             if (!mongoose.Types.ObjectId.isValid(_id)) {
                 return done(null, false);
             }
-            const oldUser = await UsersModel.findById();
+            const oldUser = await UsersModel.findById(_id);
             if (!lodash.isNull(oldUser)) {
-                return done(null, oldUser);
+                return done(null, jwt_payload.data);
             }
+            return done(null, false);
+        } catch (e) {
+            return done(e, false, e.message);
+        }
+    }));
+    passport.use("jwt-admin", new JwtStrategy(optsJWT, async (jwt_payload, done) => {
+        try {
+            const {_id} = jwt_payload.data;
+            if (!mongoose.Types.ObjectId.isValid(_id)) {
+                return done(null, false);
+            }
+            const oldUser = await UsersModel.findById(_id);
+            if (!lodash.isNull(oldUser)) {
+                if (oldUser.isAdmin) {
+                    return done(null, jwt_payload.data);
+                }
+            }
+
             return done(null, false);
         } catch (e) {
             return done(e, false, e.message);

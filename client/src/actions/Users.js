@@ -12,12 +12,19 @@ export function loginInSystem(userData) {
       .then(res => {
         const { token } = res;
         dispatch({
-          type: USERS.LOG_IN_API_GET_TOKEN_SUCCEEDED,
+          type: USERS.LOG_IN_API_SUCCEEDED,
           payload: token
         });
 
         localStorage.setItem('Authorization', token);
         setDefaultOptions(token);
+
+        UsersAPI.getInformationByJWT().then(res => {
+          dispatch({
+            type: USERS.LOG_IN_API_GET_TOKEN_SUCCEEDED,
+            payload: res
+          });
+        });
       })
       .catch(() => {
         dispatch({
@@ -37,17 +44,39 @@ export function createUser(userData) {
       .then(res => {
         const { token } = res;
         dispatch({
-          type: USERS.LOG_IN_API_GET_TOKEN_SUCCEEDED,
+          type: USERS.LOG_IN_API_SUCCEEDED,
           payload: token
         });
 
         localStorage.setItem('Authorization', token);
         setDefaultOptions(token);
+        UsersAPI.getInformationByJWT().then(res => {
+          dispatch({
+            type: USERS.LOG_IN_API_GET_TOKEN_SUCCEEDED,
+            payload: res
+          });
+        });
       })
       .catch(() => {
         dispatch({
           type: USERS.LOG_IN_API_FAILED
         });
+      });
+  };
+}
+
+export function logInUseOldJWT(JWT) {
+  return dispatch => {
+    setDefaultOptions(JWT);
+    UsersAPI.getInformationByJWT()
+      .then(res => {
+        dispatch({
+          type: USERS.LOG_IN_API_GET_TOKEN_SUCCEEDED,
+          payload: res
+        });
+      })
+      .catch(() => {
+        setDefaultOptions();
       });
   };
 }

@@ -3,7 +3,7 @@ const router = express.Router();
 const passport = require("passport");
 const {check} = require('express-validator');
 
-const {createUser, logInUser} = require('../controllers/Users');
+const {createUser, logInUser, getUserByJWT} = require('../controllers/Users');
 
 
 // @route   POST api/users
@@ -31,7 +31,7 @@ router.post('/',
 );
 
 
-// @route   GET api/users
+// @route   POST api/users/login
 // @desc    LogIn user
 // @access  Public
 router.post('/login',
@@ -44,6 +44,14 @@ router.post('/login',
             .isEmpty()
     ],
     logInUser
+);
+
+// @route   GET api/users
+// @desc    decoding jwt user's token
+// @access  Public
+router.get('/',
+    passport.authenticate("jwt-local", {session: false}),
+    getUserByJWT
 );
 
 

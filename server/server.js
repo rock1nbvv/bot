@@ -34,6 +34,7 @@ new Promise(async (resolve, reject) => {
 
 
 app.use("/api/user", require('./routes/Users'));
+app.use("/api/groups", require('./routes/Groups'));
 
 app.use(express.static(path.resolve(__dirname, "./client/build")));
 app.get("*", (req, res) => {
@@ -43,6 +44,6 @@ app.get("*", (req, res) => {
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log('Server has been started')
-})
+});
 
 

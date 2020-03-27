@@ -4,6 +4,7 @@ import reducers from '../reducers';
 import { createLogger } from 'redux-logger';
 import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
+import * as Auth from '../actions/Users';
 
 export function configureStore() {
   let store = createStore(reducers, {}, applyMiddleware(thunk));
@@ -11,5 +12,6 @@ export function configureStore() {
     const logger = createLogger();
     store = createStore(reducers, {}, composeWithDevTools(applyMiddleware(logger, thunk)));
   }
+  store.dispatch(Auth.logInUseOldJWT(localStorage.getItem('Authorization')));
   return store;
 }

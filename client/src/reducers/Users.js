@@ -4,11 +4,11 @@ const initialState = {
   loading: true,
   openWindowLogIn: false,
   isAuthorization: false,
-  isAdmin: false,
   jwt: '',
   error: '',
   personalInfo: {
     _id: '',
+    isAdmin: false,
     login: '',
     firstName: '',
     lastName: '',
@@ -27,7 +27,7 @@ export default function(state = initialState, action) {
         loading: false,
         error: ''
       };
-    case USERS.LOG_IN_API_GET_TOKEN_SUCCEEDED:
+    case USERS.LOG_IN_API_SUCCEEDED:
       return {
         ...state,
         loading: true,
@@ -40,6 +40,13 @@ export default function(state = initialState, action) {
         loading: true,
         openWindowLogIn: true,
         error: 'Failed to log in.'
+      };
+    case USERS.LOG_IN_API_GET_TOKEN_SUCCEEDED:
+      return {
+        ...state,
+        openWindowLogIn: false,
+        isAuthorization: true,
+        personalInfo: payload
       };
     case USERS.OPEN_WINDOW_AUTH:
       return {
