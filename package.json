@@ -1,0 +1,30 @@
+{
+  "name": "bot",
+  "version": "1.0.0",
+  "description": "/*\r @route GET api/contacts\r @desc Get all users contacts\r @access Private\r  */",
+  "main": "server/server.js",
+  "scripts": {
+    "test": "yarn --cwd ./client run test",
+    "start": "npm run heroku-ser --prefix ./server",
+    "installAll": "yarn install && yarn --cwd ./server install && yarn --cwd ./client install",
+    "start-dev": "concurrently \"yarn --cwd ./server run server\" \"yarn --cwd ./client run start\"",
+    "start-dev2": "concurrently \"yarn --cwd ./server run server\" \"yarn --cwd ./client run start-js\"",
+    "heroku-postbuild": "npm install && npm --prefix ./client install ./client && npm --prefix ./server install ./server && npm run heroku-cli --prefix ./client"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^5.0.0"
+  },
+  "dependencies": {
+    "@date-io/date-fns": "^2.4.0",
+    "@date-io/dayjs": "1.x",
+    "@date-io/luxon": "1.x",
+    "@date-io/moment": "1.x",
+    "@material-ui/pickers": "^3.2.10",
+    "date-fns": "^2.11.0",
+    "dayjs": "^1.8.23",
+    "luxon": "^1.22.0",
+    "moment": "^2.24.0",
+    "travis": "^0.1.1"
+  }
+}
