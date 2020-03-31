@@ -11,6 +11,7 @@ import { bindActionCreators } from 'redux';
 import * as UsersAction from '../../../actions/Users';
 import { connect } from 'react-redux';
 import Typography from '@material-ui/core/Typography';
+import TelegramLoginButton from 'react-telegram-login';
 
 class LogIn extends Component {
   constructor(props) {
@@ -42,13 +43,18 @@ class LogIn extends Component {
       }));
   };
 
+  handleTelegramResponse = response => {
+    console.log(response);
+  };
+
   render() {
-    const { handleSubmit, handleChange, togglePasswordMask } = this;
+    const { handleSubmit, handleChange, togglePasswordMask, handleTelegramResponse } = this;
     const { formData, passwordIsMasked } = this.state;
     const { loading, error } = this.props.Users;
     return (
       <div>
         <DialogTitle id="auth-dialog">Log In</DialogTitle>
+        <TelegramLoginButton dataOnauth={handleTelegramResponse} botName="ROCK1NBVV_bot" />
         <ValidatorForm ref="form" onSubmit={handleSubmit} onError={errors => console.log(errors)}>
           <TextValidator
             margin="normal"
