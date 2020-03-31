@@ -17,6 +17,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "node-sass": "^4.13.0",
     "@date-io/date-fns": "^2.4.0",
     "@date-io/dayjs": "1.x",
     "@date-io/luxon": "1.x",
@@ -118,7 +119,6 @@
     "eslint-plugin-standard": "^4.0.1",
     "husky": "^3.0.9",
     "lint-staged": "^9.4.3",
-    "node-sass": "^4.13.0",
     "npm-watch": "^0.6.0",
     "prettier": "^1.19.1",
     "standart": "^6.1.0",
