@@ -8,6 +8,7 @@ import Schedule from '../Schedule/Schedule';
 import PersonalInformation from '../PersonalInformation/PersonalInformation';
 import NewEvent from '../NewEvent/NewEvent';
 import CreateGroup from '../CreateGroup/CreateGroup';
+import ListUser from '../ListUser/ListUser';
 
 class Routes extends Component {
   render() {
@@ -17,8 +18,9 @@ class Routes extends Component {
         <Route exact path="/schedule" component={Schedule} />
         <Route exact path="/personal" component={PersonalInformation} />
         <PrivateRoute exact path="/admin" component={AdminPanel} />
-        <PrivateRoute exact path="/newEvent" component={NewEvent} />
-        <PrivateRoute exact path="/newGroup" component={CreateGroup} />
+        <PrivateRoute exact path="/newevent" component={NewEvent} />
+        <PrivateRoute exact path="/newgroup" component={CreateGroup} />
+        <PrivateRoute exact path="/listuser" component={ListUser} />
         <Route component={NotFound} />
       </Switch>
     );

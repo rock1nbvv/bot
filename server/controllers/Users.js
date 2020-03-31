@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const mongoose = require("mongoose");
 const {validationResult} = require("express-validator");
 const _ = require("lodash");
 const Users = require('../models/Users');
@@ -15,7 +16,7 @@ exports.createUser = async (req, res) => {
 
         let isUser = await Users.findOne({login});
         if (!_.isNull(isUser)) {
-            return res.status(400).json({message: `Login $.login} already exists"`});
+            return res.status(400).json({message: `Login already exists"`});
         }
 
         const salt = await bcrypt.genSalt(10);
@@ -30,7 +31,7 @@ exports.createUser = async (req, res) => {
             firstName: newUser.firstName,
             lastName: newUser.lastName,
             middleName: newUser.middleName,
-            isAdmin:newUser.isAdmin
+            isAdmin: newUser.isAdmin
         };
 
         jwt.sign({data: payload}, "rock1nbvv", {expiresIn: 36000}, (err, token) => {
@@ -77,7 +78,7 @@ exports.logInUser = async (req, res) => {
                     firstName: user.firstName,
                     lastName: user.lastName,
                     middleName: user.middleName,
-                    isAdmin:user.isAdmin
+                    isAdmin: user.isAdmin
                 };
 
                 jwt.sign({data: payload}, "rock1nbvv", {expiresIn: 36000}, (err, token) => {
@@ -98,7 +99,45 @@ exports.logInUser = async (req, res) => {
 exports.getUserByJWT = async (req, res) => {
     try {
         await res.json(req.user);
-    }catch (e) {
+    } catch (e) {
+        res.status(500).json({
+            message: e.message
+        });
+    }
+};
+
+
+exports.getAllUser = async (req, res) => {
+    try {
+        const {page = 1, limit = 9} = req.query;
+        const user = await Users.paginate({}, {
+            page,
+            limit,
+            select: '-password'
+        });
+
+        res.status(200).json(user);
+    } catch (e) {
+        res.status(500).json({
+            message: e.message
+        });
+    }
+};
+
+exports.setAdminStatus = async (req, res) => {
+    try {
+        const {status = false, idUser} = req.body;
+        if (!mongoose.Types.ObjectId.isValid(idUser)) {
+            return res.status(400).json({
+                message: `Id user is not vali`
+            });
+        }
+
+        await Users.findByIdAndUpdate(idUser, {$set: {isAdmin: status}});
+        res.status(200).json({
+            message: "Status change success"
+        })
+    } catch (e) {
         res.status(500).json({
             message: e.message
         });

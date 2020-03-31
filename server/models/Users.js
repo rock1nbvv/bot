@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const bcrypt = require("bcryptjs");
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const UsersSchema = new Schema({
     password: {
@@ -34,6 +35,8 @@ const UsersSchema = new Schema({
     }
 
 });
+
+UsersSchema.plugin(mongoosePaginate);
 
 UsersSchema.methods.comparePassword = function (candidatePassword, cb) {
     bcrypt.compare(candidatePassword, this.password, function (err, isMatch) {

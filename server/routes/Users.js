@@ -3,7 +3,7 @@ const router = express.Router();
 const passport = require("passport");
 const {check} = require('express-validator');
 
-const {createUser, logInUser, getUserByJWT} = require('../controllers/Users');
+const {createUser, logInUser, getUserByJWT, getAllUser, setAdminStatus} = require('../controllers/Users');
 
 
 // @route   POST api/users
@@ -54,5 +54,22 @@ router.get('/',
     getUserByJWT
 );
 
+
+// @route   GET api/users/all
+// @desc    Get all user for admin
+// @access  Private
+router.get('/all',
+    passport.authenticate("jwt-admin", {session: false}),
+    getAllUser
+);
+
+
+// @route   POST api/users/setstatus
+// @desc    set status admin for user
+// @access  Private
+router.post('/setstatus',
+    passport.authenticate("jwt-admin", {session: false}),
+    setAdminStatus
+);
 
 module.exports = router;

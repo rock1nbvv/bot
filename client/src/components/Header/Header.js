@@ -94,13 +94,16 @@ class Header extends Component {
         <Drawer anchor={'right'} open={isOpenDrawerAdmin && isAdmin} onClose={toggleDrawerAdmin}>
           <List>
             <ListItem onClick={toggleDrawerAdmin}>
-              <StyledLink to={'/newEvent'}>Create event</StyledLink>
+              <StyledLink to={'/newevent'}>Create event</StyledLink>
             </ListItem>
             <ListItem onClick={toggleDrawerAdmin}>
-              <StyledLink to={'/newGroup'}>Create group</StyledLink>
+              <StyledLink to={'/newgroup'}>Create group</StyledLink>
             </ListItem>
             <ListItem onClick={toggleDrawerAdmin}>
-              <StyledLink to={'/listsGroups'}>Lists groups</StyledLink>
+              <StyledLink to={'/listsgroups'}>Lists groups</StyledLink>
+            </ListItem>
+            <ListItem onClick={toggleDrawerAdmin}>
+              <StyledLink to={'/listuser'}>List users</StyledLink>
             </ListItem>
           </List>
         </Drawer>
