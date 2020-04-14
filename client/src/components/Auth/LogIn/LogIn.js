@@ -54,7 +54,7 @@ class LogIn extends Component {
     return (
       <div>
         <DialogTitle id="auth-dialog">Log In</DialogTitle>
-        <TelegramLoginButton dataOnauth={handleTelegramResponse} botName="St4n_bot" />
+        <TelegramLoginButton dataOnauth={handleTelegramResponse} botName="ROCK1NBVV_bot" />
         <ValidatorForm ref="form" onSubmit={handleSubmit} onError={errors => console.log(errors)}>
           <TextValidator
             margin="normal"
