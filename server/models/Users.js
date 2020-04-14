@@ -6,8 +6,7 @@ const mongoosePaginate = require('mongoose-paginate-v2');
 
 const UsersSchema = new Schema({
     password: {
-        type: String,
-        required: true
+        type: String
     },
     login: {
         type: String,
@@ -25,15 +24,17 @@ const UsersSchema = new Schema({
         type: String,
         required: true
     },
-    isAdmin:{
-        type:Boolean,
-        default:false
+    isAdmin: {
+        type: Boolean,
+        default: false
+    },
+    telegramId: {
+        type: String
     },
     groups: {
         type: Schema.Types.ObjectId,
         ref: "groups"
     }
-
 });
 
 UsersSchema.plugin(mongoosePaginate);

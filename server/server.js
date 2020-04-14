@@ -3,7 +3,9 @@ const mongoose = require('mongoose');
 const path = require("path");
 const bodyParser = require('body-parser');
 const passport = require('passport');
-
+const TelegramBot = require('node-telegram-bot-api');
+const token = '882497789:AAEa7ryfVtVr0LBFmejHR_E9maTB9HLMYWs';
+const bot = new TelegramBot(token, {polling: true});
 
 const app = express();
 
@@ -51,3 +53,18 @@ app.listen(PORT, () => {
 });
 
 
+bot.onText(/\/start/, (msg) => {
+
+    bot.sendMessage(msg.chat.id, "Welcome", {
+        "reply_markup": {
+            "keyboard": [["Sample text", "Second sample"],   ["Keyboard"], ["I'm robot"]]
+        }
+    });
+});
+
+bot.on('message', (msg) => {
+    var Hi = "hi";
+    if (msg.text.toString().toLowerCase().indexOf(Hi) === 0) {
+        bot.sendMessage(msg.from.id, "Hello  " + msg.from.first_name);
+    }
+});
