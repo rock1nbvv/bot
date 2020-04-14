@@ -4,8 +4,12 @@ const path = require("path");
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const TelegramBot = require('node-telegram-bot-api');
-const token = process.env.TELEGRAM_MODE==="FINAL"?'882497789:AAEa7ryfVtVr0LBFmejHR_E9maTB9HLMYWs':'1279631755:AAE3vWxpACd0nRHSdGnUGsIs0vcVQyh5XqI';
+const token = process.env.TELEGRAM_MODE === "FINAL" ? '882497789:AAEa7ryfVtVr0LBFmejHR_E9maTB9HLMYWs' : '1279631755:AAE3vWxpACd0nRHSdGnUGsIs0vcVQyh5XqI';
 const bot = new TelegramBot(token, {polling: true});
+
+
+console.log(process.env.TELEGRAM_MODE);
+console.log(token);
 
 const app = express();
 
@@ -57,7 +61,7 @@ bot.onText(/\/start/, (msg) => {
 
     bot.sendMessage(msg.chat.id, "Welcome", {
         "reply_markup": {
-            "keyboard": [["Sample text", "Second sample"],   ["Keyboard"], ["I'm robot"]]
+            "keyboard": [["Sample text", "Second sample"], ["Keyboard"], ["I'm robot"]]
         }
     });
 });
