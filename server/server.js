@@ -3,14 +3,7 @@ const mongoose = require('mongoose');
 const path = require("path");
 const bodyParser = require('body-parser');
 const passport = require('passport');
-const TelegramBot = require('node-telegram-bot-api');
-const token = process.env.TELEGRAM_MODE === "FINAL" ? '882497789:AAEa7ryfVtVr0LBFmejHR_E9maTB9HLMYWs' : '11';//1279631755:AAE3vWxpACd0nRHSdGnUGsIs0vcVQyh5XqI
-const bot = new TelegramBot(token, {polling: true});
-
-
-console.log(process.env.TELEGRAM_MODE);
-console.log(token);
-
+const {bot} =require("./telegram/bot");
 const app = express();
 
 
@@ -25,7 +18,7 @@ new Promise(async (resolve, reject) => {
             useCreateIndex: true,
             useFindAndModify: false,
             useUnifiedTopology: true
-        })
+        });
         resolve();
     } catch (e) {
         reject(e);
@@ -44,8 +37,6 @@ app.use("/api/groups", require('./routes/Groups'));
 
 app.use(express.static(path.resolve(__dirname, "../client/build")));
 app.get("*", (req, res) => {
-
-    console.log(path.resolve(__dirname, "client/build/index.html"));
     res.sendFile(path.resolve(__dirname, "client/build/index.html"));
 });
 
@@ -53,7 +44,7 @@ app.get("*", (req, res) => {
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-    console.log('Server has been started')
+    console.log('Server has been started');
 });
 
 

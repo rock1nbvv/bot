@@ -44,7 +44,8 @@ class LogIn extends Component {
   };
 
   handleTelegramResponse = response => {
-    console.log(response);
+    const { createUserByTelegram } = this.props;
+    createUserByTelegram(response);
   };
 
   render() {
@@ -112,7 +113,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    loginInSystem: bindActionCreators(UsersAction.loginInSystem, dispatch)
+    loginInSystem: bindActionCreators(UsersAction.loginInSystem, dispatch),
+    createUserByTelegram: bindActionCreators(UsersAction.createUserByTelegram, dispatch)
   };
 }
 

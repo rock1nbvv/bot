@@ -14,15 +14,15 @@ const UsersSchema = new Schema({
     },
     firstName: {
         type: String,
-        required: true
+        default: ""
     },
     lastName: {
         type: String,
-        required: true
+        default: ""
     },
     middleName: {
         type: String,
-        required: true
+        default: ""
     },
     isAdmin: {
         type: Boolean,

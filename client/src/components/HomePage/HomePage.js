@@ -6,7 +6,7 @@ class HomePage extends Component {
   render() {
     return (
       <Container>
-        <Typography variant={'h1'}>HomePage</Typography>
+        <Typography variant={'h1'}>HomePagee</Typography>
       </Container>
     );
   }

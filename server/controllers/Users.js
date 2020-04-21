@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const {validationResult} = require("express-validator");
 const _ = require("lodash");
 const Users = require('../models/Users');
+const bot = require('../telegram/bot');
 
 exports.createUser = async (req, res) => {
     try {
@@ -46,6 +47,57 @@ exports.createUser = async (req, res) => {
             message: e.message
         });
     }
+};
+
+exports.createUserByTelegram = async (req, res) => {
+    try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({errors: errors.array()});
+        }
+        let {first_name, id, last_name, username} = req.body;
+
+        let user = await Users.findOne({telegramId:id});
+
+        if(_.isNull(user)) {
+
+            const isLogin = await Users.findOne({login: username});
+            if (!_.isNull(isLogin)) {
+                username = username + id;
+            }
+            bot.sendMessage(id, ("Hello! Your login is " + username));
+
+             user = await (new Users({
+                login: username,
+                firstName: first_name,
+                lastName: last_name,
+                telegramId: id
+            })).save();
+        }
+
+        const payload = {
+            _id: user._id,
+            login: user.login,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            middleName: user.middleName,
+            isAdmin: user.isAdmin
+        };
+
+        jwt.sign({data: payload}, "rock1nbvv", {expiresIn: 36000}, (err, token) => {
+            return res.json({
+                success: true,
+                token: "Bearer " + token
+            });
+        });
+
+    } catch (e) {
+        console.log(e);
+        res.status(500).json({
+            message: e.message
+        });
+    }
+
 };
 
 exports.logInUser = async (req, res) => {
@@ -105,7 +157,6 @@ exports.getUserByJWT = async (req, res) => {
         });
     }
 };
-
 
 exports.getAllUser = async (req, res) => {
     try {
