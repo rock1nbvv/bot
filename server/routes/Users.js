@@ -9,7 +9,10 @@ const {
     getUserByJWT,
     getAllUser,
     setAdminStatus,
-    createUserByTelegram
+    createUserByTelegram,
+    editUser,
+    connectTelegramToUser,
+    disconnectTelegramToUser
 } = require('../controllers/Users');
 
 
@@ -37,6 +40,11 @@ router.post('/',
     createUser
 );
 
+// @route   PUT api/users
+// @desc    Register user
+// @access  Public
+router.put('/', passport.authenticate("jwt-local", {session: false}), editUser);
+
 // @route   POST api/users/telegram
 // @desc    Register user by telegram
 // @access  Public
@@ -56,6 +64,32 @@ router.post('/telegram',
             .isEmpty()
     ],
     createUserByTelegram
+);
+
+// @route   PUT api/users/telegram
+// @desc    Connect telegram to user
+// @access  Public
+router.put('/telegram',
+    [
+        passport.authenticate("jwt-local", {session: false}),
+        check("id", "id  is required")
+            .not()
+            .isEmpty()
+    ],
+    connectTelegramToUser
+);
+
+// @route   DELETE api/users/telegram
+// @desc    Connect telegram to user
+// @access  Public
+router.delete('/telegram',
+    [
+        passport.authenticate("jwt-local", {session: false}),
+        check("id", "id  is required")
+            .not()
+            .isEmpty()
+    ],
+    disconnectTelegramToUser
 );
 
 

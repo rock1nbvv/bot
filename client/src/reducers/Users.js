@@ -12,7 +12,8 @@ const initialState = {
     login: '',
     firstName: '',
     lastName: '',
-    middleName: ''
+    middleName: '',
+    telegramId: ''
   }
 };
 
@@ -21,13 +22,18 @@ export default function(state = initialState, action) {
   // eslint-disable-next-line
     switch (type) {
     case USERS.LOG_IN_API_REQUEST:
-    case USERS.UPDATE_PERSONAL_DATA_API_REQUEST:
+    case USERS.EDIT_USER_DATE_IN_API_REQUEST:
+    case USERS.CONNECT_TELEGRAM_IN_API_REQUEST:
+    case USERS.DISCONNECT_TELEGRAM_IN_API_REQUEST:
       return {
         ...state,
         loading: false,
         error: ''
       };
     case USERS.LOG_IN_API_SUCCEEDED:
+    case USERS.EDIT_USER_DATE_IN_API_SUCCEEDED:
+    case USERS.CONNECT_TELEGRAM_IN_API_SUCCEEDED:
+    case USERS.DISCONNECT_TELEGRAM_IN_API_SUCCEEDED:
       return {
         ...state,
         loading: true,
@@ -39,14 +45,25 @@ export default function(state = initialState, action) {
         ...initialState,
         loading: true,
         openWindowLogIn: true,
-        error: 'Failed to log in.'
+        error: payload
+      };
+    case USERS.EDIT_USER_DATE_IN_API_FAILED:
+    case USERS.CONNECT_TELEGRAM_IN_API_FAILED:
+    case USERS.DISCONNECT_TELEGRAM_IN_API_FAILED:
+      return {
+        ...initialState,
+        loading: true,
+        error: payload
       };
     case USERS.LOG_IN_API_GET_TOKEN_SUCCEEDED:
+    case USERS.EDIT_USER_DATE_IN_API_GET_TOKEN_SUCCEEDED:
+    case USERS.CONNECT_TELEGRAM_IN_API_GET_TOKEN_SUCCEEDED:
+    case USERS.DISCONNECT_TELEGRAM_IN_API_GET_TOKEN_SUCCEEDED:
       return {
         ...state,
         openWindowLogIn: false,
         isAuthorization: true,
-        personalInfo: payload
+        personalInfo: { ...payload }
       };
     case USERS.OPEN_WINDOW_AUTH:
       return {

@@ -56,16 +56,16 @@ exports.createUserByTelegram = async (req, res) => {
         }
         let {first_name, id, last_name, username} = req.body;
 
-        let user = await Users.findOne({telegramId:id});
+        let user = await Users.findOne({telegramId: id});
 
-        if(_.isNull(user)) {
+        if (_.isNull(user)) {
 
             const isLogin = await Users.findOne({login: username});
             if (!_.isNull(isLogin)) {
                 username = username + id;
             }
 
-             user = await (new Users({
+            user = await (new Users({
                 login: username,
                 firstName: first_name,
                 lastName: last_name,
@@ -90,7 +90,6 @@ exports.createUserByTelegram = async (req, res) => {
         });
 
     } catch (e) {
-        console.log(e);
         res.status(500).json({
             message: e.message
         });
@@ -186,6 +185,131 @@ exports.setAdminStatus = async (req, res) => {
         res.status(200).json({
             message: "Status change success"
         })
+    } catch (e) {
+        res.status(500).json({
+            message: e.message
+        });
+    }
+};
+
+exports.editUser = async (req, res) => {
+    try {
+        const {_id} = req.user;
+        const editInfo = {};
+        const allowField = ["password", "login", "firstName", "lastName", "middleName"];
+
+        for (let key in req.body) {
+            if (_.includes(allowField, key) & !_.isNull(req.body[`${key}`]) & req.body[`${key}`].length > 0) {
+                editInfo[`${key}`] = req.body[`${key}`];
+            }
+        }
+
+
+        const {password} = editInfo;
+        if (!_.isNull(password) & !_.isUndefined(password)) {
+            const salt = await bcrypt.genSalt(10);
+            editInfo.password = await bcrypt.hash(password, salt);
+        }
+
+
+        const newData = await (await Users.findByIdAndUpdate(_id,{$set:editInfo},{new:true})).save();
+
+        const payload = {
+            _id: newData._id,
+            login: newData.login,
+            firstName: newData.firstName,
+            lastName: newData.lastName,
+            middleName: newData.middleName,
+            isAdmin: newData.isAdmin
+        };
+
+        jwt.sign({data: payload}, "rock1nbvv", {expiresIn: 36000}, (err, token) => {
+            return res.json({
+                success: true,
+                token: "Bearer " + token
+            });
+        });
+    } catch (e) {
+        console.log(e);
+        res.status(500).json({
+            message: e.message
+        });
+    }
+};
+
+exports.connectTelegramToUser = async (req, res) => {
+    try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({errors: errors.array()});
+        }
+        const {_id} = req.user;
+        const {id: telegramId} = req.body;
+
+
+        const existedUser = await Users.findOne({telegramId: telegramId});
+
+        if (!_.isNull(existedUser)) {
+            return res.status(400).json({message: `Telegram already exists"`});
+        }
+
+        const newData = await (await Users.findByIdAndUpdate(_id, {$set: {telegramId: telegramId}}, {new: true})).save();
+
+        const payload = {
+            _id: newData._id,
+            login: newData.login,
+            firstName: newData.firstName,
+            lastName: newData.lastName,
+            middleName: newData.middleName,
+            isAdmin: newData.isAdmin
+        };
+
+        jwt.sign({data: payload}, "rock1nbvv", {expiresIn: 36000}, (err, token) => {
+            return res.json({
+                success: true,
+                token: "Bearer " + token
+            });
+        });
+    } catch (e) {
+        res.status(500).json({
+            message: e.message
+        });
+    }
+};
+
+exports.disconnectTelegramToUser = async (req, res) => {
+    try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({errors: errors.array()});
+        }
+
+        const {telegramId} = req.query;
+        const {_id} = req.user;
+
+        const oldUSer = await Users.findOne({telegramId: telegramId});
+
+        if (_.isNull(oldUSer)) {
+            return res.status(400).json({message: `Id Telegram not found"`});
+        }
+
+        const newData = await (await Users.findByIdAndUpdate(_id, {$set: {telegramId: ""}}, {new: true})).save();
+
+        const payload = {
+            _id: newData._id,
+            login: newData.login,
+            firstName: newData.firstName,
+            lastName: newData.lastName,
+            middleName: newData.middleName,
+            isAdmin: newData.isAdmin
+        };
+
+        jwt.sign({data: payload}, "rock1nbvv", {expiresIn: 36000}, (err, token) => {
+            return res.json({
+                success: true,
+                token: "Bearer " + token
+            });
+        });
     } catch (e) {
         res.status(500).json({
             message: e.message

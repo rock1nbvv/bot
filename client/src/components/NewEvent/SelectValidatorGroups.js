@@ -7,7 +7,6 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 
 export default class SelectValidatorGroups extends ValidatorComponent {
-  // это я лез в либу react-form-validator-core и делал на ее основах свой компонент
   render() {
     const {
       error,

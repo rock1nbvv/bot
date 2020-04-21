@@ -2,8 +2,17 @@ import axios from 'axios';
 
 export default class UsersAPI {
   static createUser = userData => axios.post('/api/user', userData).then(value => value.data);
+  static editUser = userData => axios.put('/api/user', userData).then(value => value.data);
   static createUserByTelegram = userData =>
     axios.post('/api/user/telegram', userData).then(value => value.data);
+  static connectUserToTelegram = userData =>
+    axios.put('/api/user/telegram', userData).then(value => value.data);
+  static disconnectUserToTelegram = userData =>
+    axios
+      .delete(`/api/user/telegram`, {
+        params: userData
+      })
+      .then(value => value.data);
   static login = logInAndPassword =>
     axios.post('/api/user/login', logInAndPassword).then(value => value.data);
   static getInformationByJWT = () => axios.get('/api/user').then(value => value.data);
