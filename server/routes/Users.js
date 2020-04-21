@@ -83,12 +83,7 @@ router.put('/telegram',
 // @desc    Connect telegram to user
 // @access  Public
 router.delete('/telegram',
-    [
-        passport.authenticate("jwt-local", {session: false}),
-        check("id", "id  is required")
-            .not()
-            .isEmpty()
-    ],
+    passport.authenticate("jwt-local", {session: false}),
     disconnectTelegramToUser
 );
 
