@@ -31,7 +31,8 @@ exports.createUser = async (req, res) => {
             firstName: newUser.firstName,
             lastName: newUser.lastName,
             middleName: newUser.middleName,
-            isAdmin: newUser.isAdmin
+            isAdmin: newUser.isAdmin,
+            telegramId: newUser.telegramId
         };
 
         jwt.sign({data: payload}, "rock1nbvv", {expiresIn: 36000}, (err, token) => {
@@ -79,7 +80,8 @@ exports.createUserByTelegram = async (req, res) => {
             firstName: user.firstName,
             lastName: user.lastName,
             middleName: user.middleName,
-            isAdmin: user.isAdmin
+            isAdmin: user.isAdmin,
+            telegramId: user.telegramId
         };
 
         jwt.sign({data: payload}, "rock1nbvv", {expiresIn: 36000}, (err, token) => {
@@ -127,7 +129,8 @@ exports.logInUser = async (req, res) => {
                     firstName: user.firstName,
                     lastName: user.lastName,
                     middleName: user.middleName,
-                    isAdmin: user.isAdmin
+                    isAdmin: user.isAdmin,
+                    telegramId: user.telegramId
                 };
 
                 jwt.sign({data: payload}, "rock1nbvv", {expiresIn: 36000}, (err, token) => {
@@ -220,7 +223,8 @@ exports.editUser = async (req, res) => {
             firstName: newData.firstName,
             lastName: newData.lastName,
             middleName: newData.middleName,
-            isAdmin: newData.isAdmin
+            isAdmin: newData.isAdmin,
+            telegramId: newData.telegramId,
         };
 
         jwt.sign({data: payload}, "rock1nbvv", {expiresIn: 36000}, (err, token) => {
@@ -261,7 +265,8 @@ exports.connectTelegramToUser = async (req, res) => {
             firstName: newData.firstName,
             lastName: newData.lastName,
             middleName: newData.middleName,
-            isAdmin: newData.isAdmin
+            isAdmin: newData.isAdmin,
+            telegramId: newData.telegramId,
         };
 
         jwt.sign({data: payload}, "rock1nbvv", {expiresIn: 36000}, (err, token) => {
@@ -301,7 +306,8 @@ exports.disconnectTelegramToUser = async (req, res) => {
             firstName: newData.firstName,
             lastName: newData.lastName,
             middleName: newData.middleName,
-            isAdmin: newData.isAdmin
+            isAdmin: newData.isAdmin,
+            telegramId: newData.telegramId,
         };
 
         jwt.sign({data: payload}, "rock1nbvv", {expiresIn: 36000}, (err, token) => {
