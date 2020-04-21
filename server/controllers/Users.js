@@ -4,7 +4,6 @@ const mongoose = require("mongoose");
 const {validationResult} = require("express-validator");
 const _ = require("lodash");
 const Users = require('../models/Users');
-const bot = require('../telegram/bot');
 
 exports.createUser = async (req, res) => {
     try {
@@ -65,7 +64,6 @@ exports.createUserByTelegram = async (req, res) => {
             if (!_.isNull(isLogin)) {
                 username = username + id;
             }
-            bot.sendMessage(id, ("Hello! Your login is " + username));
 
              user = await (new Users({
                 login: username,
