@@ -3,8 +3,9 @@ const mongoose = require('mongoose');
 const path = require("path");
 const bodyParser = require('body-parser');
 const passport = require('passport');
-const {bot} =require("./telegram/bot");
 const app = express();
+require("./telegram/bot");
+
 
 
 app.use(bodyParser.urlencoded({extended: false}));
@@ -47,19 +48,3 @@ app.listen(PORT, () => {
     console.log('Server has been started');
 });
 
-
-bot.onText(/\/start/, (msg) => {
-
-    bot.sendMessage(msg.chat.id, "Welcome", {
-        "reply_markup": {
-            "keyboard": [["Sample text", "Second sample"], ["Keyboard"], ["I'm robot"]]
-        }
-    });
-});
-
-bot.on('message', (msg) => {
-    var Hi = "hi";
-    if (msg.text.toString().toLowerCase().indexOf(Hi) === 0) {
-        bot.sendMessage(msg.from.id, "Hello  " + msg.from.first_name);
-    }
-});

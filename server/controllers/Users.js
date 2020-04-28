@@ -215,7 +215,7 @@ exports.editUser = async (req, res) => {
         }
 
 
-        const newData = await (await Users.findByIdAndUpdate(_id,{$set:editInfo},{new:true})).save();
+        const newData = await (await Users.findByIdAndUpdate(_id, {$set: editInfo}, {new: true})).save();
 
         const payload = {
             _id: newData._id,
@@ -254,7 +254,7 @@ exports.connectTelegramToUser = async (req, res) => {
         const existedUser = await Users.findOne({telegramId: telegramId});
 
         if (!_.isNull(existedUser)) {
-            return res.status(400).json({message: `Telegram already exists"`});
+            await Users.deleteOne({telegramId: telegramId});
         }
 
         const newData = await (await Users.findByIdAndUpdate(_id, {$set: {telegramId: telegramId}}, {new: true})).save();
