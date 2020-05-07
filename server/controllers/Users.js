@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const {validationResult} = require("express-validator");
 const _ = require("lodash");
 const Users = require('../models/Users');
+const GroupsModel = require('../models/Groups');
 
 exports.createUser = async (req, res) => {
     try {
@@ -322,3 +323,84 @@ exports.disconnectTelegramToUser = async (req, res) => {
         });
     }
 };
+
+exports.addUserToGroup = async (req, res) => {
+    try {
+        const {groupId} = req.body;
+        const {_id: idUser} = req.user;
+
+
+        if (!groupId) {
+            return res.status(400).json({
+                message: `Group with id ${groupId} is not found`
+            });
+        }
+
+        let isUser = await GroupsModel.find({students: idUser});
+
+        if (isUser.length > 0) {
+            return res.status(409).json({
+                message: `User with id ${groupId} is already in group`
+            });
+        }
+
+        await GroupsModel.findByIdAndUpdate(
+            {_id: groupId},
+            {$push: {students: idUser}},
+        );
+        let group = await GroupsModel.findById(groupId);
+
+        return res.status(200).json(group);
+    } catch
+        (e) {
+        return res.status(500).json({
+            message: e.message
+        });
+    }
+};
+
+exports.deleteUserFromGroup = async (req, res) => {
+    try {
+        const {groupId} = req.query;
+        const {_id: idUser} = req.user;
+
+
+        if (!mongoose.Types.ObjectId.isValid(groupId)) {
+            return res.status(400).json({
+                message: `Group Id is not valid ${groupId}`
+            });
+        }
+
+
+        let group = await GroupsModel.findById(groupId);
+
+
+        if (!group) {
+            return res.status(400).json({
+                message: `Group with id ${groupId} is not found`
+            });
+        }
+
+        if (!_.indexOf(groupId.students,idUser)>-1) {
+            return res.status(400).json({
+                message: `User with id ${groupId} not found in group`
+            });
+        }
+
+
+        group = await GroupsModel.findByIdAndUpdate(
+            {_id: groupId},
+            {$pull: {students: idUser}},
+            {new: true}
+        );
+
+
+        return res.status(200).json(group);
+    } catch
+        (e) {
+        return res.status(500).json({
+            message: e.message
+        });
+    }
+}
+;

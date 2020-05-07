@@ -25,4 +25,14 @@ export default class UsersAPI {
       .then(value => value.data);
   };
   static setAdminStatus = data => axios.post('/api/user/setstatus', data).then(value => value.data);
+  static addUserToGroup = groupId =>
+    axios.put('/api/user/group', { groupId }).then(value => value.data);
+  static deleteUserFromGroup = groupId =>
+    axios
+      .delete('/api/user/group', {
+        params: {
+          groupId
+        }
+      })
+      .then(value => value.data);
 }

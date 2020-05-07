@@ -97,10 +97,7 @@ class Header extends Component {
               <StyledLink to={'/newevent'}>Create event</StyledLink>
             </ListItem>
             <ListItem onClick={toggleDrawerAdmin}>
-              <StyledLink to={'/newgroup'}>Create group</StyledLink>
-            </ListItem>
-            <ListItem onClick={toggleDrawerAdmin}>
-              <StyledLink to={'/listsgroups'}>Lists groups</StyledLink>
+              <StyledLink to={'/listgroup'}>List groups</StyledLink>
             </ListItem>
             <ListItem onClick={toggleDrawerAdmin}>
               <StyledLink to={'/listuser'}>List users</StyledLink>

@@ -12,7 +12,9 @@ const {
     createUserByTelegram,
     editUser,
     connectTelegramToUser,
-    disconnectTelegramToUser
+    disconnectTelegramToUser,
+    addUserToGroup,
+    deleteUserFromGroup
 } = require('../controllers/Users');
 
 
@@ -127,6 +129,29 @@ router.get('/all',
 router.post('/setstatus',
     passport.authenticate("jwt-admin", {session: false}),
     setAdminStatus
+);
+
+// @route   PUT api/user/group
+// @desc    Add user to group
+// @access  Public
+router.put('/group',
+    [
+        passport.authenticate("jwt-local", {session: false}),
+        check("groupId", "Group id is required")
+            .not()
+            .isEmpty()
+    ],
+    addUserToGroup
+);
+
+// @route   DELETE api/users/group
+// @desc    remove user from group
+// @access  Public
+router.delete('/group',
+    [
+        passport.authenticate("jwt-local", {session: false}),
+    ],
+    deleteUserFromGroup
 );
 
 module.exports = router;

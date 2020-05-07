@@ -6,8 +6,8 @@ import PrivateRouteAdmin from './PrivateRouteAdmin';
 import AdminPanel from '../AdminPanel/AdminPanel';
 import Schedule from '../Schedule/Schedule';
 import PersonalInformation from '../PersonalInformation/PersonalInformation';
-import CreateGroup from '../CreateGroup/CreateGroup';
 import ListUser from '../ListUser/ListUser';
+import ListGroup from '../ListGroup/ListGroup';
 import PrivateRouteUser from './PrivateRouteUser';
 
 class Routes extends Component {
@@ -18,7 +18,7 @@ class Routes extends Component {
         <Route exact path="/schedule" component={Schedule} />
         <PrivateRouteUser exact path="/personal" component={PersonalInformation} />
         <PrivateRouteAdmin exact path="/admin" component={AdminPanel} />
-        <PrivateRouteAdmin exact path="/newgroup" component={CreateGroup} />
+        <PrivateRouteAdmin exact path="/listgroup" component={ListGroup} />
         <PrivateRouteAdmin exact path="/listuser" component={ListUser} />
         <Route component={NotFound} />
       </Switch>
