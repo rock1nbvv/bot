@@ -7,7 +7,6 @@ const app = express();
 require("./telegram/bot");
 
 
-
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
@@ -35,6 +34,7 @@ new Promise(async (resolve, reject) => {
 
 app.use("/api/user", require('./routes/Users'));
 app.use("/api/groups", require('./routes/Groups'));
+app.use("/api/event", require('./routes/Event'));
 
 app.use(express.static("../client/build"));
 app.get("*", (req, res) => {

@@ -25,15 +25,14 @@ const labels = [
     },
 ];
 
-// {
-//     event: ObjectEvent,
-//     stringEvent: String,
-//     id: Random int
-// }
-bot.onText(/\/start/, async (msg) => {
 
+const eventPool = [];
+
+
+bot.onText(/\/start/, async (msg) => {
+    resetEventPool();
     const {from: {id, first_name, last_name, username}} = msg;
-    const isOldUser = await User.findOne({telegramId: id});
+    let isOldUser = await User.findOne({telegramId: id});
     if (_.isNull(isOldUser)) {
         const user = new User({
             login: username,
@@ -41,7 +40,7 @@ bot.onText(/\/start/, async (msg) => {
             lastName: last_name,
             telegramId: id
         });
-        await user.save();
+        isOldUser = await user.save();
     }
 
     let groups = await GroupsModel.find();
@@ -62,27 +61,18 @@ bot.onText(/\/start/, async (msg) => {
     await bot.sendMessage(id, ("Welcome " + first_name + " select group"), options);
 
 
-    let event1 = bot.once("callback_query", async (callbackQuery) => {
+    let index = 2;
+    let reason = "callback_query";
+    let event2 = bot.once("callback_query", async (callbackQuery) => {
         const {data} = callbackQuery;
         const {_id} = isOldUser;
 
+        const group = await GroupsModel.find({students: _id});
+        await Promise.all(group.map(async g => {
+            return await GroupsModel.findByIdAndUpdate(g._id, {$pull:{students: _id}});
+        }));
 
-        let isUser = await GroupsModel.find({students: _id});
-
-        if (isUser.length > 0) {
-            await Promise.all(isUser.map(async g => {
-                return await GroupsModel.findByIdAndUpdate(
-                    {_id: g._id},
-                    {pull: {students: _id}}
-                )
-            }));
-        }
-
-        await GroupsModel.findByIdAndUpdate(
-            {_id: data},
-            {push: {students: _id}}
-        );
-
+        await GroupsModel.findByIdAndUpdate(data, {$push: {students: _id}});
 
         let userString = "Successfully added to group.\n\nYour data:\n";
 
@@ -93,12 +83,14 @@ bot.onText(/\/start/, async (msg) => {
         userString += "\n Please check and edit your data if needed /edit";
 
         await bot.sendMessage(id, userString);
-    });
 
-    listEvent.push(event1);
+        removeFromEventPool(index);
+    });
+    addToEventPool(index, reason, event2);
 });
 
 bot.onText(/\/edit/, async (msg) => {
+    resetEventPool();
 
     const {from: {id}} = msg;
     const user = await User.findOne({telegramId: id});
@@ -123,26 +115,61 @@ bot.onText(/\/edit/, async (msg) => {
 
     await bot.sendMessage(id, userString, options);
 
-    bot.once("callback_query", async (callbackQuery) => {
+    let index = 1;
+    let reason = "callback_query";
+
+
+    let event1 = bot.once(reason, async (callbackQuery) => {
         const {data} = callbackQuery;
         const {_id} = user;
         await bot.sendMessage(id, "Enter your data");
-        bot.once('message', async (msg) => {
+
+        let indexIn = 3;
+        let reasonIn = "message";
+        let event3 = bot.once('message', async (msg) => {
             const {text} = msg;
-            if (data === "login") {
-                const isUser = await User.findOne({login: text});
-                if (isUser) {
-                    return await bot.sendMessage(id, "Login is used");
+            if (_.isString(text) && text.length > 0 && text[0] !== "/") {
+                if (data === "login") {
+                    const isUser = await User.findOne({login: text});
+                    if (isUser) {
+                        return await bot.sendMessage(id, "Login is used");
+                    }
                 }
+                const query = {$set: {}};
+                query.$set[`${data}`] = text;
+                User.findByIdAndUpdate(_id, query).then(async () => {
+                    await bot.sendMessage(id, "Success change data");
+                });
             }
-            const query = {$set: {}};
-            query.$set[`${data}`] = text;
-            User.findByIdAndUpdate(_id, query).then(async () => {
-                await bot.sendMessage(id, "Success change data");
-            });
+            removeFromEventPool(indexIn);
         });
+        addToEventPool(indexIn, reasonIn, event3);
+
+
+        removeFromEventPool(index);
     });
+    addToEventPool(index, reason, event1);
 });
+
+
+const resetEventPool = () => {
+    if (eventPool.length > 0) {
+        eventPool.forEach(e => {
+            bot.removeListener(e.reason, e.event);
+        });
+        eventPool.splice(0, eventPool.length);
+    }
+};
+
+const addToEventPool = (index, reason, event) => {
+    eventPool.push({index, reason, event});
+};
+
+const removeFromEventPool = index => {
+    let indexEventPool = _.findIndex(eventPool, (o) => o.index === index);
+    bot.removeListener(eventPool[indexEventPool].reason, eventPool[indexEventPool].event);
+    eventPool.splice(indexEventPool, 1);
+};
 
 
 module.exports = bot;
