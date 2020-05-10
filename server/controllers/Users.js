@@ -336,13 +336,11 @@ exports.addUserToGroup = async (req, res) => {
             });
         }
 
-        let isUser = await GroupsModel.find({students: idUser});
+        let groupAll = await GroupsModel.find({students: idUser});
 
-        if (isUser.length > 0) {
-            return res.status(409).json({
-                message: `User with id ${groupId} is already in group`
-            });
-        }
+        await Promise.all(groupAll.map(async g => {
+            return await GroupsModel.findByIdAndUpdate(g._id, {$pull:{students: idUser}});
+        }));
 
         await GroupsModel.findByIdAndUpdate(
             {_id: groupId},

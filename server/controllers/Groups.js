@@ -63,7 +63,7 @@ exports.editGroup = async (req, res) => {
 
         const {groupId, name} = req.body;
 
-        if(!name){
+        if (!name) {
             return res.status(400).json({
                 message: `Name is required`
             });
@@ -110,6 +110,31 @@ exports.deleteGroup = async (req, res) => {
             message: `Group with id ${groupId} is successfully deleted from DB.`,
             deletedCategoryInfo: group
         });
+    } catch (e) {
+        res.status(500).json({
+            message: "Server Error!"
+        });
+    }
+};
+
+exports.getGroupByUser = async (req, res) => {
+    try {
+        const {_id} = req.user;
+        const group = await GroupsModel.findOne({students: _id});
+        res.status(200).json(group);
+    } catch (e) {
+        res.status(500).json({
+            message: "Server Error!"
+        });
+    }
+};
+
+exports.getGroupList = async (req, res) => {
+    try {
+        res.status(200).json(await GroupsModel.find({},{
+            name:1,
+            _id:1
+        }));
     } catch (e) {
         res.status(500).json({
             message: "Server Error!"

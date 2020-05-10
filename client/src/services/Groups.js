@@ -27,4 +27,7 @@ export default class GroupsAPI {
       }
     });
   }
+
+  static getGroupByUser = async () => axios.get('/api/groups/user').then(value => value.data);
+  static getGroupList = async () => axios.get('/api/groups/list').then(value => value.data);
 }

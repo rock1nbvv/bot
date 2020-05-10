@@ -3,7 +3,7 @@ const router = express.Router();
 const passport = require("passport");
 const {check} = require('express-validator');
 
-const {createGroup, getAllGroups, editGroup, deleteGroup} = require('../controllers/Groups');
+const {createGroup, getAllGroups, editGroup, deleteGroup, getGroupByUser, getGroupList} = require('../controllers/Groups');
 
 
 // @route   POST api/groups
@@ -31,20 +31,24 @@ router.get('/all',
 // @route   PUT api/groups
 // @desc    edit group
 // @access  Public
-router.put('/',[
-    passport.authenticate("jwt-admin", {session: false}),
+router.put('/', [
+        passport.authenticate("jwt-admin", {session: false}),
         check("groupId", "groupId is required")
             .not()
             .isEmpty(),
         check("name", "Name is required")
             .not()
             .isEmpty(),
- ],
- editGroup);
+    ],
+    editGroup);
 
 // @route   DELETE api/groups/:id
 // @desc    edit group
 // @access  Public
 router.delete('/', passport.authenticate("jwt-admin", {session: false}), deleteGroup);
+
+router.get('/user', passport.authenticate("jwt-local", {session: false}), getGroupByUser);
+
+router.get('/list', passport.authenticate("jwt-local", {session: false}), getGroupList);
 
 module.exports = router;

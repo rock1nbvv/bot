@@ -10,6 +10,12 @@ import { RemoveRedEye, VisibilityOff } from '@material-ui/icons';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import TelegramLoginButton from 'react-telegram-login';
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import GroupsAPI from '../../services/Groups';
+import UsersAPI from '../../services/Users';
 
 class PersonalInformation extends Component {
   constructor(props) {
@@ -24,7 +30,9 @@ class PersonalInformation extends Component {
         middleName: ''
       },
       passwordIsMasked: true,
-      repeatPasswordIsMasked: true
+      repeatPasswordIsMasked: true,
+      selectedGroup: '',
+      group: []
     };
   }
 
@@ -48,6 +56,18 @@ class PersonalInformation extends Component {
       return value === formData.password;
     });
     this.loadUserData();
+
+    GroupsAPI.getGroupList().then(res => {
+      GroupsAPI.getGroupByUser().then(resUser => {
+        if (resUser) {
+          this.setState({ selectedGroup: resUser._id });
+        } else {
+          this.setState({ selectedGroup: res[0]._id });
+        }
+        this.setState({ group: res });
+        console.log(this.state);
+      });
+    });
   }
 
   componentWillUnmount() {
@@ -91,6 +111,15 @@ class PersonalInformation extends Component {
     const { disconnectUserToTelegram } = this.props;
     disconnectUserToTelegram({ telegramId });
   };
+  handleChangeGroup = event => {
+    this.setState({ selectedGroup: event.target.value });
+  };
+
+  submitGroup = e => {
+    e.preventDefault();
+    const { selectedGroup } = this.state;
+    UsersAPI.addUserToGroup(selectedGroup).then(res => {});
+  };
 
   render() {
     const {
@@ -100,12 +129,16 @@ class PersonalInformation extends Component {
       handleSubmit,
       handleTelegramResponse,
       disconnectTelegram,
-      handleSubmitChangePassword
+      handleSubmitChangePassword,
+      handleChangeGroup,
+      submitGroup
     } = this;
     const {
       formData: { firstName, lastName, middleName, login, password, repeatPassword },
       passwordIsMasked,
-      repeatPasswordIsMasked
+      repeatPasswordIsMasked,
+      selectedGroup,
+      group
     } = this.state;
     const { telegramId } = this.props.Users.personalInfo;
     return (
@@ -120,6 +153,32 @@ class PersonalInformation extends Component {
             </Button>
           </Box>
         )}
+        <ValidatorForm ref="form" onSubmit={submitGroup} onError={errors => console.log(errors)}>
+          <FormControl style={{ width: '100%' }}>
+            <InputLabel id="demo-simple-select-group">Select group</InputLabel>
+            <Select
+              labelId="demo-simple-select-group"
+              id="demo-group-select"
+              fullWidth
+              value={selectedGroup}
+              onChange={handleChangeGroup}
+            >
+              {group.map(g => {
+                const { _id, name } = g;
+                return (
+                  <MenuItem key={_id} value={_id}>
+                    {name}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
+          <Box mt={1}>
+            <Button type="submit" fullWidth variant="contained" color="primary">
+              Save Group
+            </Button>
+          </Box>
+        </ValidatorForm>
 
         <ValidatorForm ref="form" onSubmit={handleSubmit} onError={errors => console.log(errors)}>
           <TextValidator
