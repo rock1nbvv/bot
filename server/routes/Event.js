@@ -3,7 +3,7 @@ const router = express.Router();
 const passport = require("passport");
 const {check} = require('express-validator');
 
-const {createEvent, createScheduledEvent} = require('../controllers/Event');
+const {createEvent, createScheduledEvent, getAllEvents} = require('../controllers/Event');
 
 
 // @route   POST api/event
@@ -47,6 +47,12 @@ router.post('/sch',
     createScheduledEvent
 );
 
-
+//@route   GET api/event/all
+//@desc    Get all user for admin
+//@access  Private
+router.get('/all',
+    passport.authenticate("jwt-admin", {session: false}),
+    getAllEvents
+);
 
 module.exports = router;

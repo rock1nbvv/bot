@@ -12,10 +12,10 @@ import Auth from '../Auth/Auth';
 import Box from '@material-ui/core/Box';
 import './Header.scss';
 import SettingsIcon from '@material-ui/icons/Settings';
-import StyledLink from '../styled/StyledLink';
 import { Drawer } from '@material-ui/core';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
+import { Link } from 'react-router-dom';
 
 class Header extends Component {
   constructor(props) {
@@ -51,9 +51,9 @@ class Header extends Component {
           <IconButton onClick={toggleDrawer} edge="start" color="inherit" aria-label="menu">
             <MenuIcon />
           </IconButton>
-          <StyledLink className={'admin-btn'} to={'/'} color="inherit">
+          <Link className={'admin-btn'} to={'/'} color="inherit">
             <Typography variant="h6">Home</Typography>
-          </StyledLink>
+          </Link>
           <Box className={'header-main-block'} display="flex" justifyContent="flex-end" m={1}>
             {isAuthorization ? (
               <Box>
@@ -84,23 +84,23 @@ class Header extends Component {
         <Drawer open={isOpenDrawer} onClose={toggleDrawer}>
           <List>
             <ListItem onClick={toggleDrawer}>
-              <StyledLink to={'/schedule'}>Schedule</StyledLink>
+              <Link to={'/schedule'}>Schedule</Link>
             </ListItem>
             <ListItem onClick={toggleDrawer}>
-              <StyledLink to={'/personal'}>Personal information</StyledLink>
+              <Link to={'/personal'}>Personal information</Link>
             </ListItem>
           </List>
         </Drawer>
         <Drawer anchor={'right'} open={isOpenDrawerAdmin && isAdmin} onClose={toggleDrawerAdmin}>
           <List>
             <ListItem onClick={toggleDrawerAdmin}>
-              <StyledLink to={'/newevent'}>Create event</StyledLink>
+              <Link to={'/listevent'}>List events</Link>
             </ListItem>
             <ListItem onClick={toggleDrawerAdmin}>
-              <StyledLink to={'/listgroup'}>List groups</StyledLink>
+              <Link to={'/listgroup'}>List groups</Link>
             </ListItem>
             <ListItem onClick={toggleDrawerAdmin}>
-              <StyledLink to={'/listuser'}>List users</StyledLink>
+              <Link to={'/listuser'}>List users</Link>
             </ListItem>
           </List>
         </Drawer>

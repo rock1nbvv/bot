@@ -65,7 +65,6 @@ class PersonalInformation extends Component {
           this.setState({ selectedGroup: res[0]._id });
         }
         this.setState({ group: res });
-        console.log(this.state);
       });
     });
   }

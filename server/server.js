@@ -30,10 +30,8 @@ mongoose.connect("mongodb+srv://admin:admin@cluster0-9rlxe.mongodb.net/test1?ret
                 path: "students"
             }
         });
-
     let now = new Date();
     await Promise.all(opened_evs.map(async e => {
-
         const {date, _id, name, description, groupId: {students}} = e;
         const d = new Date(date);
         if (d < now) {

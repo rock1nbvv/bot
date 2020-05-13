@@ -93,3 +93,25 @@ exports.createScheduledEvent = async (req, res) => {
         });
     }
 };
+
+
+exports.getAllEvents = async (req, res) => {
+    try {
+        const {page = 1, limit = 9} = req.query;
+        const event = await EventModel.paginate({}, {
+            page,
+            limit,
+            populate:[
+                {
+                    path:"groupId"
+                }
+            ]
+        });
+
+        return res.status(200).json(event);
+    } catch (e) {
+        return res.status(500).json({
+            message: e.message
+        });
+    }
+};

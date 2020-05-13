@@ -40,9 +40,10 @@ router.put('/', [
             .not()
             .isEmpty(),
     ],
-    editGroup);
+    editGroup
+);
 
-// @route   DELETE api/groups/:id
+// @route   DELETE api/groups
 // @desc    edit group
 // @access  Public
 router.delete('/', passport.authenticate("jwt-admin", {session: false}), deleteGroup);

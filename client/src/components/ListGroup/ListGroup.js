@@ -33,7 +33,7 @@ class ListGroup extends Component {
               newdata.push({
                 _id: studentID,
                 parentId: _id,
-                nameStudent: firstName + lastName + middleName
+                nameStudent: firstName + ' ' + lastName + ' ' + middleName
               });
             });
           });
@@ -51,7 +51,7 @@ class ListGroup extends Component {
                   newdataErrorPAge.push({
                     _id: studentID,
                     parentId: _id,
-                    nameStudent: firstName + lastName + middleName
+                    nameStudent: firstName + ' ' + lastName + ' ' + middleName
                   });
                 });
               });
