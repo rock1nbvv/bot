@@ -3,7 +3,7 @@ const router = express.Router();
 const passport = require("passport");
 const {check} = require('express-validator');
 
-const {createEvent, createScheduledEvent, getAllEvents} = require('../controllers/Event');
+const {createEvent, createScheduledEvent, getAllEvents, getAllEventsByGroup} = require('../controllers/Event');
 
 
 // @route   POST api/event
@@ -53,6 +53,14 @@ router.post('/sch',
 router.get('/all',
     passport.authenticate("jwt-admin", {session: false}),
     getAllEvents
+);
+
+//@route   GET api/event/group
+//@desc    Get all user for admin
+//@access  Private
+router.get('/group',
+    passport.authenticate("jwt-local", {session: false}),
+    getAllEventsByGroup
 );
 
 module.exports = router;

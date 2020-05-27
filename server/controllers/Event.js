@@ -101,12 +101,46 @@ exports.getAllEvents = async (req, res) => {
         const event = await EventModel.paginate({}, {
             page,
             limit,
-            populate:[
+            populate: [
                 {
-                    path:"groupId"
+                    path: "groupId"
                 }
             ]
         });
+
+        return res.status(200).json(event);
+    } catch (e) {
+        return res.status(500).json({
+            message: e.message
+        });
+    }
+};
+
+exports.getAllEventsByGroup = async (req, res) => {
+    try {
+        const {_id} = req.user;
+        const group = await GroupsModel.findOne({students: _id});
+        let event = {
+            totalPages: 0,
+            limit: 9,
+            docs: [],
+            totalDocs: 0,
+            page: 0
+        };
+        if (!_.isNull(group)) {
+            const {page = 1, limit = 9} = req.query;
+
+            event = await EventModel.paginate({groupId: group._id}, {
+                page,
+                limit,
+                populate: [
+                    {
+                        path: "groupId"
+                    }
+                ],
+                sort:     { date: -1 }
+            });
+        }
 
         return res.status(200).json(event);
     } catch (e) {

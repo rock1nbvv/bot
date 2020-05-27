@@ -84,9 +84,6 @@ class Header extends Component {
         <Drawer open={isOpenDrawer} onClose={toggleDrawer}>
           <List>
             <ListItem onClick={toggleDrawer}>
-              <Link to={'/schedule'}>Schedule</Link>
-            </ListItem>
-            <ListItem onClick={toggleDrawer}>
               <Link to={'/personal'}>Personal information</Link>
             </ListItem>
           </List>
