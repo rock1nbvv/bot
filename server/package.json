@@ -8,7 +8,7 @@
     "server": "nodemon server.js",
     "heroku-ser": "node server.js"
   },
-  "author": "vashenko49",
+  "author": "vlad",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.19.0",
